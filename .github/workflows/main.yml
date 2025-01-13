@@ -8,4 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print actor (user who triggered this workflow)
-        run: echo "This workflow was triggered manually by: ${{ github.actor }}"
+        run: echo "${{ github.actor }}"
