@@ -7,5 +7,7 @@ jobs:
   log-user:
     runs-on: ubuntu-latest
     steps:
-      - name: Print actor (user who triggered this workflow)
-        run: echo "${{ github.actor }}"
+      - name: Print actor (user who triggered this workflow in uppercase)
+        run: |
+          actor="${{ github.actor }}"
+          python -c "print('${{ github.actor }}'.upper())"
