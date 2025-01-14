@@ -19,6 +19,9 @@ jobs:
           echo "token_name=${actor_mayusculas}_PULUMI_ACCESS_TOKEN" >> $GITHUB_OUTPUT
           echo "Variable construida: ${actor_mayusculas}_PULUMI_ACCESS_TOKEN"
 
+          # Configurar el stack name dinámico
+          echo "stack_name=${actor_mayusculas}_STACK_NAME" >> $GITHUB_OUTPUT
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -44,7 +47,7 @@ jobs:
         uses: pulumi/actions@v3
         with:
           command: preview
-          stack-name: LuisRiosAcloud/virtualmachinegcp/dev
+          stack-name: ${{ secrets[steps.set-var-name.outputs.stack_name] }}
           work-dir: ./proyecto
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets[steps.set-var-name.outputs.token_name] }}
