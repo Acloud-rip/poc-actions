@@ -9,10 +9,5 @@ jobs:
     steps:
       - name: Print actor (user who triggered this workflow in uppercase)
         run: |
-          # Guardar el actor en una variable
-          actor="${{ github.actor }}"
-          # Convertir a mayúsculas usando bash
-          actor_mayusculas=$(echo "$actor" | tr '[:lower:]' '[:upper:]')
-          # Mostrar ambos valores
-          echo "Usuario original: $actor"
+          actor=$(echo "${{ github.actor }}" | tr '[:lower:]' '[:upper:]')
           echo "Usuario en mayúsculas: $actor_mayusculas"
