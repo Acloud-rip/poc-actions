@@ -1,4 +1,4 @@
-name: virtualmachinegcp
+name: prueba01
 description: crear vm en gcp
 runtime: python
 config:
