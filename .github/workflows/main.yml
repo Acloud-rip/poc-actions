@@ -1,13 +1,48 @@
-name: Manual Workflow Example 123
+name: Pulumi CI/CD
 
 on:
   workflow_dispatch:
 
 jobs:
-  log-user:
+  deploy:
+    name: Deploy Infrastructure
     runs-on: ubuntu-latest
     steps:
-      - name: Print actor (user who triggered this workflow in uppercase)
+      - uses: actions/checkout@v4
+
+      - name: Configurar nombre de variable dinámica
+        id: set-var-name
         run: |
-          actor=$(echo "${{ github.actor }}" | tr '[:lower:]' '[:upper:]')
-          echo "Usuario en mayúsculas: $actor_mayusculas"
+          # Convertir el actor a mayúsculas
+          actor_mayusculas=$(echo "${{ github.actor }}" | tr '[:lower:]' '[:upper:]')
+          # Crear el nombre completo de la variable
+          echo "token_name=${actor_mayusculas}_PULUMI_ACCESS_TOKEN" >> $GITHUB_OUTPUT
+          echo "Variable construida: ${actor_mayusculas}_PULUMI_ACCESS_TOKEN"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pulumi
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Deploy with Pulumi
+        uses: pulumi/actions@v3
+        with:
+          command: preview
+          stack-name: LuisRiosAcloud/virtualmachinegcp/dev
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets[steps.set-var-name.outputs.token_name] }}
