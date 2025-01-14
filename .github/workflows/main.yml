@@ -44,5 +44,6 @@ jobs:
         with:
           command: preview
           stack-name: LuisRiosAcloud/virtualmachinegcp/dev
+          work-dir: ./proyecto
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets[steps.set-var-name.outputs.token_name] }}
